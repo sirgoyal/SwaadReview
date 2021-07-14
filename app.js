@@ -2,12 +2,13 @@ const express= require('express');
 const app = express();
 const methodOverride = require('method-override');
 const path= require('path');
+const ejsMate= require('ejs-mate');
 const mongoose = require('mongoose');
 const Campground = require('./models/campground');
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
 .then(()=> {console.log("Connection open!")})
 .catch(err => {
-    console.log("Nahi chal raha")
+    console.log("Not connected!!")
     console.log(err)
 }
  )
@@ -16,10 +17,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', {useNewUrlParser: true, 
  app.use(methodOverride('_method'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+app.engine('ejs', ejsMate);
 app.listen(3000, ()=>
 {
-    console.log("Chal raha hai!!");
+    console.log("Connected!!");
 })
 
 app.get('/', (req, res) => {
