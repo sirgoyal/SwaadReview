@@ -1,5 +1,4 @@
 const express= require('express');
-const app = express();
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const path= require('path');
@@ -10,6 +9,7 @@ const mongoose = require('mongoose');
 const passport= require('passport');
 const LocalStrategy= require('passport-local');
 const User= require('./models/user');
+
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes= require('./routes/users');
@@ -20,9 +20,15 @@ mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', {useNewUrlParser: true, 
     console.log("Not connected!!")
     console.log(err)
 }
- )
+ );
+ 
+ const app = express();
 
- app.use(express.urlencoded({ extended: true })); //used to parse for posting
+app.engine('ejs', ejsMate);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+ 
+app.use(express.urlencoded({ extended: true })); //used to parse for posting
  app.use(methodOverride('_method'));
  app.use(express.static(path.join(__dirname, 'public'))) //to access static public assets
 
@@ -47,26 +53,27 @@ passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
 //setting up flash middleware before calling routes
+
 app.use((req, res, next) => {
-    //we update the returnTo everytime so that user goes to the latest page they checked post login
-    if(!['/login', '/'].includes(req.originalUrl)) {
-        req.session.returnTo = req.originalUrl;
+    if (!['/login', '/register', '/'].includes(req.originalUrl)) {
+        req.session.previousReturnTo = req.session.returnTo; // store the previous url
+        req.session.returnTo = req.originalUrl; // assign a new url
+        console.log('req.session.previousReturnTo', req.session.previousReturnTo)
+        console.log('req.session.returnTo', req.session.returnTo);
     }
-    res.locals.currentUser= req.user;
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 })
 
-app.use('/', userRoutes)
-
- app.use('/campgrounds', campgroundRoutes)
+app.use('/', userRoutes);
+app.use('/campgrounds', campgroundRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.engine('ejs', ejsMate);
+
 app.listen(3000, ()=>
 {
     console.log("Connected!!");
@@ -79,6 +86,8 @@ app.get('/', (req, res) => {
 
 //if the req isnt found, we send the error to the middleware with the message and status
 app.all('*', (req, res, next) => {
+    req.session.returnTo = req.session.previousReturnTo;
+    console.log('Previous returnTo reset to:', req.session.returnTo )
     next(new ExpressError('Page Not Found', 404))
 })
 
