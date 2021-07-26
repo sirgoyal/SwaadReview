@@ -26,13 +26,9 @@ const seedDB = async () => {
             geometry: { coordinates: [ cities[random1000].longitude, cities[random1000].latitude ], type: 'Point' },
             images: [
                 {
-                  url: 'https://res.cloudinary.com/sirgoyal/image/upload/v1627030922/yelpcamp/wiafkwralkqigq2at7wy.jpg',
-                  filename: 'yelpcamp/wiafkwralkqigq2at7wy'
+                  url: 'https://images.unsplash.com/photo-1536305030588-45dc07a2a372?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                  filename: 'yelpcamp/default_outlet_ydlzzd'
                 },
-                {
-                  url: 'https://res.cloudinary.com/sirgoyal/image/upload/v1627030922/yelpcamp/poxtfka0k8ttd9a0fmiw.jpg',
-                  filename: 'yelpcamp/poxtfka0k8ttd9a0fmiw'
-                }
               ]
         })
         await camp.save(); // saving the camp to db
