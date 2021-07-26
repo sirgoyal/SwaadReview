@@ -148,10 +148,6 @@ app.use('/foodOutlets', foodOutletRoutes)
 app.use('/foodOutlets/:id/reviews', reviewRoutes)
 
 
-app.listen(3000, ()=>
-{
-    console.log("Connected!!");
-})
 
 app.get('/', (req, res) => {
     res.render('home')
@@ -173,4 +169,9 @@ app.use((err, req, res, next)=>
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
     res.status(statusCode).render('error', { err })
+})
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`)
 })
