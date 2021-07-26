@@ -32,18 +32,18 @@
           <ul class="list-group list-group-flush">
               <li class="list-group-item text-muted"><%= campground.location%></li>
               <li class="list-group-item">Submitted by <%= campground.author.username%></li>
-              <li class="list-group-item">$<%= campground.price%>/night</li>
+              <li class="list-group-item">&#8377;<%= campground.price%>/two persons (approx.)</li>
           </ul>
           <%  if( currentUser && campground.author.equals(currentUser._id))  {%>
           <div class="card-body">
-              <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">Edit</a>
-              <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
+              <a class="card-link btn btn-info" href="/foodOutlets/<%=campground._id%>/edit">Edit</a>
+              <form class="d-inline" action="/foodOutlets/<%=campground._id%>?_method=DELETE" method="POST">
                   <button class="btn btn-danger">Delete</button>
               </form>
           </div>
           <% } %>
           <div class="card-footer text-muted">
-              2 days ago
+              <%= moment(campground.dateOfCreation, 'MM/DD/YY, HH:mm:ss').startOf('minute').fromNow() %>
           </div>
       </div>
 
@@ -53,7 +53,7 @@
 
       <% if(currentUser){ %>
       <h2>Leave a Review</h2>
-      <form action="/campgrounds/<%=campground._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+      <form action="/foodOutlets/<%=campground._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
           <!-- <div class="mb-3">
               <label class="form-label" for="rating">Rating</label>
               <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
@@ -85,6 +85,10 @@
       <% for(let review of campground.reviews) { %>
       <div class="card mb-3 ">
           <div class="card-body">
+            <div >
+                <h6><span class="text-muted"> <%= moment(review.dateCreated, 'MM/DD/YY, HH:mm:ss').startOf('minute').fromNow() %></span></h6>
+            </div>
+
               <h5 class="card-title"> <%= review.author.username%></h5>
               <p class="starability-result" data-rating="<%=review.rating%>">
                   Rated: <%= review.rating %> stars
@@ -92,7 +96,7 @@
               <!-- <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username%></h6> -->
               <p class="card-text">Review: <%= review.body %></p>
               <%  if( currentUser && review.author.equals(currentUser._id))  {%>
-              <form action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+              <form action="/foodOutlets/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                   <button class="btn btn-sm btn-danger">Delete</button>
               </form>
               <% } %>
