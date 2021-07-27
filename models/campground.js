@@ -15,6 +15,10 @@ ImageSchema.virtual('imgdefault').get(function () {
     return this.url.replace('/upload', '/upload/c_scale,h_300,w_350');
 });
 
+ImageSchema.virtual('imgcarousel').get(function () {
+    return this.url.replace('/upload', '/upload/c_scale,h_225,w_350');
+});
+
 const opts = { toJSON: { virtuals: true } };
 
 const CampgroundSchema = new Schema({
