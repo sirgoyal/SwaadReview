@@ -40,12 +40,6 @@ Install dependencies
 ```
 
 
-
-## Live Demo
-
-To see the app in action, go to: https://hidden-thicket-09759.herokuapp.com/
-
-
 ## Author
 
 - [Shreeram Goyal](https://github.com/sirgoyal/)
